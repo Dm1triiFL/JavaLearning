@@ -8,6 +8,7 @@ public class Main {
         Directory directory = new Directory("my_directory"); // Создаем новую директорию
         TextFile textFile = new TextFile("example.txt", directory); // Создаем новый текстовый файл
 
+
         textFile.create(); // Создаем файл
         textFile.append("Hello, world!\n"); // Дополняем файл
         textFile.display(); // Выводим содержимое
