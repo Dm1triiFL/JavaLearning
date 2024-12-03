@@ -1,7 +1,7 @@
 package org.example.part_6;
 
 public class SmartPhone extends Computer {
-    private String operatingSystem;
+    String operatingSystem;
 
     public SmartPhone(String model, double price, int ram, String screenResolution, String processor, String operatingSystem) {
         createModel(model);

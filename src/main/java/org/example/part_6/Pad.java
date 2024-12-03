@@ -1,7 +1,7 @@
 package org.example.part_6;
 
 public class Pad extends Computer {
-    private boolean hasStylus;
+    boolean hasStylus;
 
     public Pad(String model, double price, int ram, String screenResolution, String processor, boolean hasStylus) {
         createModel(model);
@@ -16,6 +16,10 @@ public class Pad extends Computer {
     public void displayInfo() {
         super.displayInfo();
         System.out.println("Has Stylus: " + (hasStylus ? "Yes" : "No"));
+    }
+
+    public boolean hasStylus() {
+        return hasStylus;
     }
 
     public void draw(String drawing) {
