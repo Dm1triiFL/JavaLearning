@@ -1,8 +1,10 @@
 package org.example.part_7;
 
 //"Шубин Дмитрий Б762-2 Вариант 12");
-import java.util.function.IntConsumer;
-import java.util.function.IntPredicate;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ArrayProcessor {
     private int[] arr;
@@ -12,18 +14,21 @@ public class ArrayProcessor {
     }
 
     public int[] removeEvensAndFillWithZeros() {
-        int[] result = new int[arr.length];
-        final int[] index = {0};
+        List<Integer> filteredList = Arrays.stream(arr)
+                .filter(num -> num % 2 != 0)
+                .boxed()
+                .collect(Collectors.toList());
 
-        IntPredicate isEven = num -> num % 2 == 0;
 
-
-        for (int num : arr) {
-            if (!isEven.test(num)) {
-                result[index[0]++] = num;
-            }
+        int zerosToAdd = arr.length - filteredList.size();
+        for (int i = 0; i < zerosToAdd; i++) {
+            filteredList.add(0);
         }
 
-        return result;
+
+
+        return filteredList.stream()
+                .mapToInt(Integer::intValue)
+                .toArray();
     }
 }
