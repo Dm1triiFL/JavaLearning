@@ -1,5 +1,6 @@
 package org.example.part_7;
 
+//"Шубин Дмитрий Б762-2 Вариант 12");
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 

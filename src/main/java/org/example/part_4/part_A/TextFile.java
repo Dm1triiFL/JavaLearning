@@ -12,77 +12,56 @@ public class TextFile extends File {
     }
 
     @Override
-    public void create() {
-        try {
-            new FileWriter(directory.getPath() + java.io.File.separator + name).close();
+    public void create() throws IOException {
+        try (FileWriter writer = new FileWriter(directory.getPath() + java.io.File.separator + name)) {
             System.out.println("Файл '" + name + "' успешно создан.");
-        } catch (IOException e) {
-            System.out.println("Ошибка при создании файла: " + e.getMessage());
         }
     }
 
     @Override
-    public void rename(String newName) {
+    public void rename(String newName) throws IOException {
         java.io.File oldFile = new java.io.File(directory.getPath() + java.io.File.separator + name);
         java.io.File newFile = new java.io.File(directory.getPath() + java.io.File.separator + newName);
-        try {
-            if (oldFile.renameTo(newFile)) {
-                name = newName;
-                System.out.println("Файл переименован в '" + name + "'.");
-            } else {
-                System.out.println("Ошибка при переименовании файла.");
-            }
-        } catch (SecurityException e) {
-            System.out.println("Ошибка доступа при попытке переименования: " + e.getMessage());
+        if (!oldFile.renameTo(newFile)) {
+            throw new IOException("Ошибка при переименовании файла.");
         }
+        name = newName;
+        System.out.println("Файл переименован в '" + name + "'.");
     }
 
     @Override
-    public void append(String content) {
+    public void append(String content) throws IOException {
         try (FileWriter writer = new FileWriter(directory.getPath() + java.io.File.separator + name, true)) {
             writer.write(content);
             System.out.println("Текст успешно добавлен в файл '" + name + "'.");
-        } catch (IOException e) {
-            System.out.println("Ошибка при добавлении текста: " + e.getMessage());
         }
     }
 
     @Override
-    public void display() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(directory.getPath() + java.io.File.separator + name))) {
+    public void display() throws IOException {
+        java.io.File file = new java.io.File(directory.getPath() + java.io.File.separator + name);
+        if (!file.exists()) {
+            throw new IOException("Файл '" + name + "' не существует.");
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             System.out.println("Содержимое файла '" + name + "':");
             String line;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
             }
-        } catch (IOException e) {
-            System.out.println("Ошибка при чтении файла: " + e.getMessage());
         }
     }
 
     @Override
-    public void delete() {
+    public void delete() throws IOException {
         java.io.File fileToDelete = new java.io.File(directory.getPath() + java.io.File.separator + name);
-        try {
-            if (fileToDelete.delete()) {
-                System.out.println("Файл '" + name + "' успешно удален.");
-            } else {
-                System.out.println("Ошибка при удалении файла.");
-            }
-        } catch (SecurityException e) {
-            System.out.println("Ошибка доступа при попытке удаления файла: " + e.getMessage());
+        if (!fileToDelete.exists()) {
+            throw new IOException("Файл '" + name + "' не существует.");
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        return super.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
+        if (!fileToDelete.delete()) {
+            throw new IOException("Ошибка при удалении файла.");
+        }
+        System.out.println("Файл '" + name + "' успешно удален.");
     }
 
     @Override
