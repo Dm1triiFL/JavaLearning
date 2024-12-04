@@ -24,14 +24,6 @@ public class ArrayProcessor {
             }
         }
 
-        IntConsumer fillWithZeros = i -> {
-            while (index[0] < result.length) {
-                result[index[0]++] = 0;
-            }
-        };
-
-        fillWithZeros.accept(0);
-
         return result;
     }
 }
