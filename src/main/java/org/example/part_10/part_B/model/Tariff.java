@@ -3,10 +3,10 @@ package org.example.part_10.part_B.model;
 import java.io.Serializable;
 
 public abstract class Tariff implements Serializable {
-    private static final long serialVersionUID = 1L; // Уникальный идентификатор версии
+    private static final long serialVersionUID = 1L;
     protected String name;
     protected double monthlyFee;
-    protected transient int customerCount; // Не сериализуемое поле
+    protected transient int customerCount;
 
     public Tariff(String name, double monthlyFee) {
         this.name = name;

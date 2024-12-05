@@ -9,7 +9,7 @@ public class TariffConnector {
 
     private static final String FILE_NAME = "tariffs.ser";
 
-    // Метод для сохранения тарифов в файл
+
     public void saveTariffs(List<Tariff> tariffs) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
             oos.writeObject(tariffs);
@@ -19,7 +19,7 @@ public class TariffConnector {
         }
     }
 
-    // Метод для загрузки тарифов из файла
+
     @SuppressWarnings("unchecked")
     public List<Tariff> loadTariffs() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {

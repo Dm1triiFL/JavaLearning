@@ -13,24 +13,21 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Шубин Дмитрий Б762-2 Вариант 12");
+        System.out.println("Шубин Дмитрий Б762-2");
         TariffService tariffService = new TariffService();
         TariffConnector tariffConnector = new TariffConnector();
         Scanner scanner = new Scanner(System.in);
 
-        // Загрузка тарифов из файла
         List<Tariff> loadedTariffs = tariffConnector.loadTariffs();
         if (loadedTariffs != null) {
             for (Tariff tariff : loadedTariffs) {
                 tariffService.addTariff(tariff);
             }
         } else {
-            // Добавление тарифов по умолчанию, если файл пустой
             tariffService.addTariff(new BasicTariff("Basic Plan", 9.99, 100));
             tariffService.addTariff(new PremiumTariff("Premium Plan", 19.99, 200));
         }
 
-        // Вывод всех тарифов
         tariffService.displayTariffs();
 
         while (true) {

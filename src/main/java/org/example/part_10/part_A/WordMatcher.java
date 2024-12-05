@@ -4,6 +4,7 @@ import java.io.*;
 public class WordMatcher {
 
     public static void main(String[] args) {
+        //"Шубин Дмитрий Б762-2" Вариант 4
         String inputFilePath = "";
         String outputFilePath = "";
 
