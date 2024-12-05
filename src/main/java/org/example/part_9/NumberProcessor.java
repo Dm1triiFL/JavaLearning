@@ -48,7 +48,7 @@ public class NumberProcessor {
         Locale locale;
         switch (localeStr.toLowerCase()) {
             case "fr":
-                locale = Locale.FRENCH; // Французская локаль
+                locale = Locale.FRENCH;
                 numberStr = numberStr.replace(',', '.');
                 break;
             case "en":
