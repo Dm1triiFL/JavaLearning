@@ -1,0 +1,5 @@
+Hello world
+This is a test input file
+Searching for specific words
+example word
+another example
