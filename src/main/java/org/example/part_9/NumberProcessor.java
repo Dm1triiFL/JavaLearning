@@ -38,7 +38,7 @@ public class NumberProcessor {
         } catch (FileNotFoundException e) {
             throw new FileError("Файл '" + filename + "' не найден.");
         } catch (IOException e) {
-            throw new MemoryError("Ошибка чтения файла.");
+            throw new FileError("Ошибка чтения файла.");
         } catch (OutOfMemoryError e) {
             throw new MemoryError("Ошибка: недостаточно памяти для создания и хранения чисел.");
         }
