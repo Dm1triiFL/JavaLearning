@@ -1,5 +1,0 @@
-sad -> dad
-dad -> dad
-sad -> dad
-lol -> lol
-lol -> lol

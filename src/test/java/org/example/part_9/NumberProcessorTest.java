@@ -18,8 +18,8 @@ class NumberProcessorTest {
     @BeforeEach
     void setUp() throws IOException {
 
-        validFilePath = "src/test/resources/valid_numbers.txt";
-        invalidFilePath = "src/test/resources/invalid_numbers.txt";
+        validFilePath = "src/test/resources/part_9/valid_numbers.txt";
+        invalidFilePath = "src/test/resources/part_9/invalid_numbers.txt";
 
         createValidTestFile(validFilePath);
         createInvalidTestFile(invalidFilePath);
