@@ -3,7 +3,7 @@ package org.example.part_9;
 public class Main {
     public static void main(String[] args) {
 
-        NumberProcessor processor = new NumberProcessor("C:\\Users\\dmshu\\IdeaProjects\\JavaLearning\\src\\main\\resources\\numbers.txt");
+        NumberProcessor processor = new NumberProcessor("src\\main\\resources\\numbers.txt");
 
 
         try {

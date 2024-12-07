@@ -19,19 +19,22 @@ public class NumberProcessor {
     }
 
     public void readFile() throws FileError, MemoryError {
+        List<String> invalidMessages = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length != 2) {
-                    throw new InvalidValueError("Некорректная строка: " + line);
+                    System.err.println("Некорректная строка: " + line);
+                    continue;
                 }
                 String numberStr = parts[0];
                 String locale = parts[1];
                 try {
                     processNumber(numberStr, locale);
+                    System.out.println("Добавлено число: " + numberStr);
                 } catch (InvalidValueError e) {
-                    throw new InvalidValueError(e.getMessage());
+                    invalidMessages.add(e.getMessage());
                 }
             }
         } catch (FileNotFoundException e) {
@@ -39,7 +42,16 @@ public class NumberProcessor {
         } catch (IOException e) {
             throw new MemoryError("Ошибка чтения файла. Недостаточно памяти или другие проблемы.");
         }
+
+        if (!invalidMessages.isEmpty()) {
+            System.err.println("Некорректные значения были проигнорированы:");
+            for (String message : invalidMessages) {
+                System.err.println(message);
+            }
+        }
     }
+
+
 
 
     void processNumber(String numberStr, String localeStr) throws InvalidValueError {

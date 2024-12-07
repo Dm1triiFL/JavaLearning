@@ -52,18 +52,22 @@ class NumberProcessorTest {
     }
 
     @Test
+
     void testReadFileInvalidData() {
         numberProcessor = new NumberProcessor(invalidFilePath);
 
-        Exception exception = assertThrows(InvalidValueError.class, () -> {
+        try {
             numberProcessor.readFile();
-        });
+        } catch (FileError | MemoryError e) {
+            fail("Исключение было выброшено: " + e.getMessage());
+        }
 
-        assertNotNull(exception);
+        assertEquals(1, numberProcessor.numbers.size());
+        assertTrue(numberProcessor.numbers.contains(1000.0));
 
-        assertTrue(exception.getMessage().contains("Некорректная запись числа: notANumber") ||
-                exception.getMessage().contains("Недопустимое значение: 20000.0"));
     }
+
+
 
 
     @Test

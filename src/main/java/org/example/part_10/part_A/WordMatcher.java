@@ -23,7 +23,7 @@ public class WordMatcher {
                 return;
             }
         } else {
-            System.out.println("иИспользование:   java WordMatcher  <Входной файл>   <выходной файл> ИЛИ java   WordMatcher <Конфигурационный файл>");
+            System.out.println("Использование:   java WordMatcher  <Входной файл>   <выходной файл> ИЛИ java   WordMatcher <Конфигурационный файл>");
             return;
         }
 

@@ -9,9 +9,9 @@ import java.util.regex.Pattern;
 public class WordSearcher {
 
     public static void main(String[] args) {
-        String inputFilePath = "C:\\Users\\dmshu\\IdeaProjects\\JavaLearning\\src\\main\\resources\\10_input_file.txt";
-        String outputFilePath = "C:\\Users\\dmshu\\IdeaProjects\\JavaLearning\\src\\main\\resources\\10_output_file.txt";
-        String patternString = "word";
+        String inputFilePath = "src\\main\\resources\\10_input_file.txt";
+        String outputFilePath = "src\\main\\resources\\10_output_file.txt";
+        String patternString = "This";
 
         try {
             List<String> foundWords = searchWordsInFile(inputFilePath, patternString);

@@ -1,0 +1,2 @@
+C:\\Users\\dmshu\\IdeaProjects\\JavaLearning\\src\\main\\resources\\inputFile.txt
+C:\\Users\\dmshu\\IdeaProjects\\JavaLearning\\src\\main\\resources\\outputFile.txt
