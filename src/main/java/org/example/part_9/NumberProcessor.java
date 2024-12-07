@@ -11,8 +11,6 @@ public class NumberProcessor {
     private final String filename;
     final List<Double> numbers;
 
-
-
     public NumberProcessor(String filename) {
         this.filename = filename;
         this.numbers = new ArrayList<>();
@@ -41,6 +39,8 @@ public class NumberProcessor {
             throw new FileError("Файл '" + filename + "' не найден.");
         } catch (IOException e) {
             throw new MemoryError("Ошибка чтения файла. Недостаточно памяти или другие проблемы.");
+        } catch (OutOfMemoryError e) {
+            throw new MemoryError("Ошибка: недостаточно памяти для создания и хранения чисел.");
         }
 
         if (!invalidMessages.isEmpty()) {
@@ -51,10 +51,7 @@ public class NumberProcessor {
         }
     }
 
-
-
-
-    void processNumber(String numberStr, String localeStr) throws InvalidValueError {
+    void processNumber(String numberStr, String localeStr) throws InvalidValueError,MemoryError {
         double number;
 
         Locale locale;
@@ -77,20 +74,26 @@ public class NumberProcessor {
             throw new InvalidValueError("Некорректная запись числа: " + numberStr);
         }
 
-
         if (number < -10000 || number > 10000) {
             throw new InvalidValueError("Недопустимое значение: " + number);
         }
 
-        numbers.add(number);
+        try {
+            numbers.add(number);
+        } catch (OutOfMemoryError e) {
+            throw new MemoryError("Ошибка: недостаточно памяти для добавления числа: " + numberStr);
+        }
     }
 
-    public double calculateSum() {
-        return numbers.stream().mapToDouble(Double::doubleValue).sum();
+    public double calculateSum() throws MemoryError {
+        try {
+            return numbers.stream().mapToDouble(Double::doubleValue).sum();
+        } catch (OutOfMemoryError e) {
+            throw new MemoryError("Ошибка: недостаточно памяти для вычисления суммы чисел.");
+        }
     }
 
-
-    public double calculateAverage() throws InvalidValueError {
+    public double calculateAverage() throws InvalidValueError, MemoryError {
         if (numbers.isEmpty()) {
             throw new InvalidValueError("Нет чисел для вычисления.");
         }
