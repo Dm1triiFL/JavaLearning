@@ -18,8 +18,8 @@ class NumberProcessorTest {
     @BeforeEach
     void setUp() throws IOException {
 
-        validFilePath = "src/test/resources/valid_numbers.txt";
-        invalidFilePath = "src/test/resources/invalid_numbers.txt";
+        validFilePath = "src/test/resources/part_9/valid_numbers.txt";
+        invalidFilePath = "src/test/resources/part_9/invalid_numbers.txt";
 
         createValidTestFile(validFilePath);
         createInvalidTestFile(invalidFilePath);
@@ -52,18 +52,22 @@ class NumberProcessorTest {
     }
 
     @Test
+
     void testReadFileInvalidData() {
         numberProcessor = new NumberProcessor(invalidFilePath);
 
-        Exception exception = assertThrows(InvalidValueError.class, () -> {
+        try {
             numberProcessor.readFile();
-        });
+        } catch (FileError | MemoryError e) {
+            fail("Исключение было выброшено: " + e.getMessage());
+        }
 
-        assertNotNull(exception);
+        assertEquals(1, numberProcessor.numbers.size());
+        assertTrue(numberProcessor.numbers.contains(1000.0));
 
-        assertTrue(exception.getMessage().contains("Некорректная запись числа: notANumber") ||
-                exception.getMessage().contains("Недопустимое значение: 20000.0"));
     }
+
+
 
 
     @Test
