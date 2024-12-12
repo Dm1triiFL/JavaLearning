@@ -43,7 +43,7 @@ public class WordMatcher {
                     String currentWord = words[i];
                     String nextWord = words[i + 1];
 
-                    if (currentWord.length() > 0 && nextWord.length() > 0) {
+                    if (!currentWord.isEmpty() && !nextWord.isEmpty()) {
                         char lastChar = currentWord.charAt(currentWord.length() - 1);
                         char firstChar = nextWord.charAt(0);
 
@@ -58,4 +58,5 @@ public class WordMatcher {
             e.printStackTrace();
         }
     }
+
 }

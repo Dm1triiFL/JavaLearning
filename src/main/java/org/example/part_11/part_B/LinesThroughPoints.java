@@ -37,7 +37,7 @@ public class LinesThroughPoints {
         writeLinesToFile(outputFileName, linesMap);
     }
 
-    private static List<Point> readPointsFromFile(String fileName) {
+    static List<Point> readPointsFromFile(String fileName) {
         List<Point> points = new ArrayList<>();
 
 
@@ -57,7 +57,7 @@ public class LinesThroughPoints {
         return points;
     }
 
-    private static void writeLinesToFile(String fileName, Map<String, Set<Point>> linesMap) {
+    static void writeLinesToFile(String fileName, Map<String, Set<Point>> linesMap) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (Map.Entry<String, Set<Point>> entry : linesMap.entrySet()) {
                 if (entry.getValue().size() > 2) {
@@ -69,7 +69,7 @@ public class LinesThroughPoints {
         }
     }
 
-    private static String getLineKey(Point p1, Point p2) {
+    static String getLineKey(Point p1, Point p2) {
         int dy = p2.y - p1.y;
         int dx = p2.x - p1.x;
 

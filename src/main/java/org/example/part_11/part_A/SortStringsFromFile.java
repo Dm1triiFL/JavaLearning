@@ -8,10 +8,15 @@ import java.util.Collections;
 import java.util.List;
 
 public class SortStringsFromFile {
-    public static void main(String[] args) {
-        String filePath = "src\\main\\resources\\part_11\\part_A\\strings.txt";
-        List<String> lines = new ArrayList<>();
 
+    private String filePath;
+
+    public SortStringsFromFile(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public List<String> readLines() {
+        List<String> lines = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -20,11 +25,20 @@ public class SortStringsFromFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return lines;
+    }
 
+    public void sortAndPrintLines() {
+        List<String> lines = readLines();
         Collections.sort(lines);
-
         for (String line : lines) {
             System.out.println(line);
         }
+    }
+
+    public static void main(String[] args) {
+        String filePath = "src\\main\\resources\\part_11\\part_A\\strings.txt";
+        SortStringsFromFile sorter = new SortStringsFromFile(filePath);
+        sorter.sortAndPrintLines();
     }
 }

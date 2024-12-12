@@ -2,7 +2,7 @@ package org.example.part_10.part_B.model;
 
 import java.io.Serializable;
 
-public abstract class Tariff implements Serializable {
+public class Tariff implements Serializable {
     private static final long serialVersionUID = 1L;
     protected String name;
     protected double monthlyFee;
