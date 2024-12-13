@@ -1,5 +1,4 @@
 package org.example.part_12;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
@@ -48,13 +47,21 @@ class Port {
         return (containersInPort + ship.getContainers() <= capacity);
     }
 
-    public Dock getAvailableDock() {
-        for (Dock dock : docks) {
-            if (!dock.isOccupied()) {
-                return dock;
+    public Dock getAvailableDock() throws InterruptedException {
+        lock.lock();
+        try {
+            for (Dock dock : docks) {
+                if (!dock.isOccupied()) {
+                    return dock;
+                }
             }
+            for (Dock dock : docks) {
+                dock.getAvailableCondition().await();
+            }
+            return null;
+        } finally {
+            lock.unlock();
         }
-        return null;
     }
 }
 
@@ -62,6 +69,7 @@ class Dock {
     private final Port port;
     private boolean occupied;
     private final Lock lock = new ReentrantLock();
+    private final Condition availableCondition = lock.newCondition();
 
     public Dock(Port port) {
         this.port = port;
@@ -81,33 +89,57 @@ class Dock {
         lock.lock();
         try {
             occupied = false;
+            availableCondition.signalAll();
         } finally {
             lock.unlock();
         }
     }
 
+
     public boolean isOccupied() {
-        lock.lock();
-        try {
-            return occupied;
-        } finally {
-            lock.unlock();
-        }
+        return occupied;
+    }
+
+    public Condition getAvailableCondition() {
+        return availableCondition;
     }
 
     public void loadShip(Ship ship) {
-        occupy();
-        port.loadContainers(ship.getContainers());
-        System.out.println("Корабль загружен: " + ship.getName());
-        release();
+        lock.lock();
+        try {
+            while (occupied) {
+                availableCondition.await();
+            }
+            occupy();
+            port.loadContainers(ship.getContainers());
+            System.out.println("Корабль загружен: " + ship.getName());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            release();
+            availableCondition.signal();
+            lock.unlock();
+        }
     }
 
     public void unloadShip(Ship ship) {
-        occupy();
-        port.unloadContainers(ship.getContainers());
-        System.out.println("Корабль разгружен: " + ship.getName());
-        release();
+        lock.lock();
+        try {
+            while (occupied) {
+                availableCondition.await();
+            }
+            occupy();
+            port.unloadContainers(ship.getContainers());
+            System.out.println("Корабль разгружен: " + ship.getName());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            release();
+            availableCondition.signal();
+            lock.unlock();
+        }
     }
+
 }
 
 class Ship {
@@ -138,12 +170,14 @@ public class PortSimulation {
         for (int i = 0; i < 10; i++) {
             Ship ship = new Ship("Корабль " + (i + 1), (i % 5) + 5);
             executor.submit(() -> {
-                Dock dock = port.getAvailableDock();
-                if (dock != null) {
-                    dock.loadShip(ship);
-                    dock.unloadShip(ship);
-                } else {
-                    System.out.println("Нет доступных причалов для " + ship.getName());
+                try {
+                    Dock dock = port.getAvailableDock();
+                    if (dock != null) {
+                        dock.loadShip(ship);
+                        dock.unloadShip(ship);
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             });
         }
