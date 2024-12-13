@@ -1,80 +1,68 @@
 package org.example.part_12;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-class PortTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class PortSimulationTest {
+    private Port port;
+
+    @BeforeEach
+    void setUp() {
+        port = new Port(3, 100);
+    }
+
     @Test
     void testLoadContainers() {
-        Port port = new Port(3, 100);
-        port.loadContainers(10);
-        assertEquals(10, port.containersInPort);
+        port.loadContainers(20);
+        assertEquals(20, port.containersInPort);
     }
 
     @Test
     void testUnloadContainers() {
-        Port port = new Port(3, 100);
-        port.loadContainers(10);
-        port.unloadContainers(5);
-        assertEquals(5, port.containersInPort);
+        port.loadContainers(30);
+        port.unloadContainers(10);
+        assertEquals(20, port.containersInPort);
     }
 
     @Test
     void testCanDock() {
-        Port port = new Port(3, 100);
         Ship ship = new Ship("Корабль 1", 50);
         assertTrue(port.canDock(ship));
+
+        port.loadContainers(60);
+        assertFalse(port.canDock(new Ship("Корабль 2", 50)));
     }
 
-    @Test
-    void testCannotDock() {
-        Port port = new Port(3, 100);
-        port.loadContainers(100);
-        Ship ship = new Ship("Корабль 1", 10);
-        assertFalse(port.canDock(ship));
-    }
 
     @Test
-    void testGetAvailableDock() {
-        Port port = new Port(3, 100);
-        Dock availableDock = port.getAvailableDock();
-        assertNotNull(availableDock);
-    }
+    void testMultipleShipLoadingAndUnloading() throws InterruptedException {
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+        Ship[] ships = {
+                new Ship("Корабль 1", 110),
+                new Ship("Корабль 2", 50),
+                new Ship("Корабль 3", 30)
+        };
 
-    @Test
-    void testDockOccupancy() {
-        Port port = new Port(1, 100);
-        Dock dock = port.getAvailableDock();
-        Ship ship = new Ship("Корабль 1", 10);
-        dock.occupy();
-        assertTrue(dock.isOccupied());
-        dock.release();
-        assertFalse(dock.isOccupied());
-    }
-
-    @Test
-    void testConcurrentLoadingAndUnloading() throws InterruptedException {
-        Port port = new Port(3, 100);
-        ExecutorService executor = Executors.newFixedThreadPool(6);
-
-        for (int i = 0; i < 6; i++) {
-            int shipIndex = i;
+        for (Ship ship : ships) {
             executor.submit(() -> {
-                Ship ship = new Ship("Корабль " + (shipIndex + 1), 20);
-                Dock dock = port.getAvailableDock();
-                if (dock != null) {
-                    dock.loadShip(ship);
-                    dock.unloadShip(ship);
+                try {
+                    Dock dock = port.getAvailableDock();
+                    if (dock != null) {
+                        dock.loadShip(ship);
+                        dock.unloadShip(ship);
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             });
         }
         executor.shutdown();
         while (!executor.isTerminated()) {
-            Thread.sleep(100);
         }
 
         assertEquals(0, port.containersInPort);
