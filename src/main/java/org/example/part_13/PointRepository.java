@@ -8,7 +8,8 @@ public class PointRepository {
     private final DatabaseConnection dbConnection = new DatabaseConnection();
 
     public void createTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS Points (id INTEGER PRIMARY KEY AUTOINCREMENT, x REAL, y REAL);";
+        String sql = "CREATE TABLE IF NOT EXISTS Points (id INTEGER PRIMARY KEY AUTO_INCREMENT, x REAL, y REAL);";
+
         try (Connection conn = dbConnection.getConnection(); Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
