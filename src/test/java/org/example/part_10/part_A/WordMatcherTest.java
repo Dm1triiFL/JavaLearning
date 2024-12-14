@@ -21,6 +21,31 @@ public class WordMatcherTest {
         matcher = new WordMatcher();
     }
 
+    @Test
+    public void testMatchingWords() throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(inputFile))) {
+            writer.write("hello orange\n");
+            writer.write("apple eclair\n");
+            writer.write("test start\n");
+            writer.write("midday dawn\n");
+        }
+
+        matcher.processFiles(inputFile.getAbsolutePath(), outputFile.getAbsolutePath());
+
+        StringBuilder result = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(outputFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line).append("\n");
+            }
+        }
+
+        String expectedOutput = "hello -> orange\n" +
+                "apple -> eclair\n";
+
+        assertEquals(expectedOutput.trim(), result.toString().trim());
+    }
+
 
     @Test
     public void testNoMatches() throws IOException {
