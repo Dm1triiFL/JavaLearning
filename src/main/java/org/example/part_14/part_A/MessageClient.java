@@ -2,7 +2,7 @@ package org.example.part_14.part_A;
 
 import java.io.*;
 import java.net.*;
-
+//Вариант 4 Шубин Дмитрий
 public class MessageClient {
     private static final String SERVER_ADDRESS = "localhost";
     private static final int SERVER_PORT = 12345;
