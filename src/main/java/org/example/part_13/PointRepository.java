@@ -5,12 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PointRepository {
-    private final DatabaseConnection dbConnection = new DatabaseConnection();
+    private final Connection connection;
+
+    public PointRepository() throws SQLException {
+        DatabaseConnection dbConnection = new DatabaseConnection();
+        this.connection = dbConnection.getConnection();
+        createTable();
+    }
 
     public void createTable() {
         String sql = "CREATE TABLE IF NOT EXISTS Points (id INTEGER PRIMARY KEY AUTO_INCREMENT, x REAL, y REAL);";
 
-        try (Connection conn = dbConnection.getConnection(); Statement stmt = conn.createStatement()) {
+        try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -19,7 +25,7 @@ public class PointRepository {
 
     public void addPoint(Point point) {
         String sql = "INSERT INTO Points (x, y) VALUES (?, ?);";
-        try (Connection conn = dbConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setDouble(1, point.getX());
             pstmt.setDouble(2, point.getY());
             pstmt.executeUpdate();
@@ -31,7 +37,7 @@ public class PointRepository {
     public List<Point> getAllPoints() {
         List<Point> points = new ArrayList<>();
         String sql = "SELECT x, y FROM Points;";
-        try (Connection conn = dbConnection.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 points.add(new Point(rs.getDouble("x"), rs.getDouble("y")));
             }
@@ -39,5 +45,15 @@ public class PointRepository {
             e.printStackTrace();
         }
         return points;
+    }
+
+    public void close() {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

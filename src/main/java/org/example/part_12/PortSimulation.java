@@ -107,6 +107,7 @@ class Dock {
     public void loadShip(Ship ship) {
         lock.lock();
         try {
+            Thread.sleep(10);
             while (occupied) {
                 availableCondition.await();
             }

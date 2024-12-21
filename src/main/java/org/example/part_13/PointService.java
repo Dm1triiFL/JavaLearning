@@ -2,10 +2,12 @@ package org.example.part_13;
 
 import java.util.List;
 
-import java.util.List;
-
 public class PointService {
-    private final PointRepository repository = new PointRepository();
+    private final PointRepository repository;
+
+    public PointService(PointRepository repository) {
+        this.repository = repository;
+    }
 
     public void addPoint(Point point) {
         repository.addPoint(point);
@@ -13,12 +15,16 @@ public class PointService {
 
     public Point findNearestPoint(Point origin) {
         List<Point> points = repository.getAllPoints();
-        return points.stream().min((p1, p2) -> Double.compare(p1.distance(origin), p2.distance(origin))).orElse(null);
+        return points.stream()
+                .min((p1, p2) -> Double.compare(p1.distance(origin), p2.distance(origin)))
+                .orElse(null);
     }
 
     public Point findFurthestPoint(Point origin) {
         List<Point> points = repository.getAllPoints();
-        return points.stream().max((p1, p2) -> Double.compare(p1.distance(origin), p2.distance(origin))).orElse(null);
+        return points.stream()
+                .max((p1, p2) -> Double.compare(p1.distance(origin), p2.distance(origin)))
+                .orElse(null);
     }
 
     public List<Point> findCollinearPoints(Point point1, Point point2) {
@@ -28,4 +34,3 @@ public class PointService {
         return points.stream().filter(p -> p.getY() == k * p.getX() + b).toList();
     }
 }
-
