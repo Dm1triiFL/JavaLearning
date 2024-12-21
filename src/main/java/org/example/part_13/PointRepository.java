@@ -7,6 +7,7 @@ import java.util.List;
 public class PointRepository {
     private final Connection connection;
 
+
     public PointRepository() throws SQLException {
         DatabaseConnection dbConnection = new DatabaseConnection();
         this.connection = dbConnection.getConnection();
